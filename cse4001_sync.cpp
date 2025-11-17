@@ -279,7 +279,7 @@ int main(int argc, char **argv )
         for( long p = 0; p < numReaders; p++ )
         {
             int rc = pthread_create ( &readerThread[ p ], NULL, 
-                                    Writer, (void *) (p+1) );
+                                    Reader, (void *) (p+1) );
             if (rc) {
                 printf("ERROR creating reader thread # %d; \
                         return code from pthread_create() is %d\n", p, rc);
@@ -290,7 +290,7 @@ int main(int argc, char **argv )
         for( long c = 0; c < numWriters; c++ )
         {
             int rc = pthread_create ( &writerThread[ c ], NULL, 
-                                    Reader, (void *) (c+1) );
+                                    Writer, (void *) (c+1) );
             if (rc) {
                 printf("ERROR creating writer thread # %d; \
                         return code from pthread_create() is %d\n", c, rc);
