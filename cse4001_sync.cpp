@@ -129,13 +129,13 @@ void *Writer ( void *threadID )
     
     while( 1 )
     {
+        sleep(2);
         turnstile.wait();
         roomEmpty.wait();
         printf("Writer %d: Writing. \n",x);
         fflush(stdout);
         turnstile.signal();
         roomEmpty.signal();
-        sleep(2);
     }
 
 }
@@ -173,13 +173,13 @@ void *Writer2 ( void *threadID )
     
     while( 1 )
     {
+        sleep(2);
         writeSwitch.lock(noReaders);
         noWriters.wait();
         printf("Writer %d: Writing. \n",x);
         fflush(stdout);
         noWriters.signal();
         writeSwitch.unlock(noReaders);
-        sleep(2);
     }
 
 }
@@ -279,7 +279,7 @@ int main(int argc, char **argv )
         for( long p = 0; p < numReaders; p++ )
         {
             int rc = pthread_create ( &readerThread[ p ], NULL, 
-                                    Reader, (void *) (p+1) );
+                                    Writer, (void *) (p+1) );
             if (rc) {
                 printf("ERROR creating reader thread # %d; \
                         return code from pthread_create() is %d\n", p, rc);
@@ -290,7 +290,7 @@ int main(int argc, char **argv )
         for( long c = 0; c < numWriters; c++ )
         {
             int rc = pthread_create ( &writerThread[ c ], NULL, 
-                                    Writer, (void *) (c+1) );
+                                    Reader, (void *) (c+1) );
             if (rc) {
                 printf("ERROR creating writer thread # %d; \
                         return code from pthread_create() is %d\n", c, rc);
@@ -352,8 +352,6 @@ int main(int argc, char **argv )
         printf("Number must be between 1 and 4.");
         exit(-1);
     }
-
-    printf("Main: program completed. Exiting.\n");
 
 
     // To allow other threads to continue execution, the main thread 
